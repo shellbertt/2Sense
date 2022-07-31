@@ -1,3 +1,5 @@
+# generate and rotate many triangles
+
 import triangle
 from tkinter import *
 from random import randint, random
@@ -13,7 +15,6 @@ class controller():
         # balance number of triangles with their size so everything fits reasonably
         self.count = 500
         self.radius = int((screenw * screenh // self.count) ** .5)
-        print(screenw, screenh, self.count, 'initr', self.radius)
         self.horizontal_count = screenw // self.radius
         self.vertical_count = screenh // self.radius
         self.count = self.horizontal_count * self.vertical_count
