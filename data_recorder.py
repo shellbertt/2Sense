@@ -1,8 +1,27 @@
+# manage data recording
+# based off of https://brainflow.readthedocs.io/en/stable/Examples.html#python-get-data-from-a-board
+
 import argparse
 import time
 
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds, BrainFlowPresets
 import numpy
+
+def save_data():
+    data = board.get_board_data()  # get all data and remove it from internal buffer
+    eeg_channels = BoardShim.get_eeg_channels(args.board_id)
+    time_stamp_channel = BoardShim.get_timestamp_channel(args.board_id)
+    marker_channel = BoardShim.get_marker_channel(args.board_id)
+    rows_of_interest = eeg_channels + [time_stamp_channel] + [marker_channel]
+    rows = numpy.stack([data[row] for row in rows_of_interest])
+    numpy.savetxt('data', rows)
+
+def begin_recording():
+    pass
+
+def end_recording():
+    board.stop_stream()
+    board.release_session()
 
 def main():
     BoardShim.enable_dev_board_logger()
@@ -44,16 +63,7 @@ def main():
     board.prepare_session()
     board.start_stream()
     time.sleep(.5)
-    # data = board.get_current_board_data (256) # get latest 256 packages or less, doesnt remove them from internal buffer
-    data = board.get_board_data()  # get all data and remove it from internal buffer
-    eeg_channels = BoardShim.get_eeg_channels(args.board_id)
-    time_stamp_channel = BoardShim.get_timestamp_channel(args.board_id)
-    marker_channel = BoardShim.get_marker_channel(args.board_id)
-    board.stop_stream()
-    board.release_session()
-    rows_of_interest = eeg_channels + [time_stamp_channel] + [marker_channel]
-    rows = numpy.stack([data[row] for row in rows_of_interest])
-    rows.tofile('data', sep=',')
+    save_data()
 
 if __name__ == "__main__":
     main()
