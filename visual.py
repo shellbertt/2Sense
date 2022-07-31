@@ -31,8 +31,8 @@ class controller():
         if on:
             for t in self.triangles:
                 t.draw()
-            self.canvas.update()
             for t in self.triangles:
                 t.rotate(self.period)
+        self.canvas.update()
         self.canvas.delete('all')
 
