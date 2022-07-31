@@ -15,6 +15,8 @@ window = Tk()
 window.geometry("1000x600")
 window.title("2Sense_Stimulation")
 
+window.overrideredirect(1)
+
 bg = PhotoImage(file = "assets/LogoBanner.png") #adding an image as a background for later
 
 Width = 1000
