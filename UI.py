@@ -14,7 +14,6 @@ window = Tk()
 window.geometry("1000x600")
 window.title("2Sense_Stimulation")
 
-window.overrideredirect(1) #borderless window
 
 bg = PhotoImage(file = "assets/LogoBanner.png") #adding an image as a background for later
 
@@ -94,6 +93,7 @@ def StopStim():
     exit()
     print('?')
 
+window.protocol('WM_DELETE_WINDOW', StopStim)  #Stop stimulation when x button is pressed
 
 while True:
     stim.iterate()
