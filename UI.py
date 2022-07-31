@@ -15,7 +15,7 @@ window = Tk()
 window.geometry("1000x600")
 window.title("2Sense_Stimulation")
 
-bg = PhotoImage(file = "LogoBanner.png") #adding an image as a background for later
+bg = PhotoImage(file = "assets/LogoBanner.png") #adding an image as a background for later
 
 Width = 1000
 Height = 600
@@ -33,7 +33,7 @@ stim = main.controller()
 #introFrame.pack()
 
 def playBeep():
-    pygame.mixer.music.load("beep.wav")
+    pygame.mixer.music.load("assets/beep.wav")
     pygame.mixer.music.play(loops=0)
 
 def NoStimulation():
@@ -72,7 +72,7 @@ VisButton = Button(window, text = "Visual Only", command=VisualOnly).place(x=300
 VibButton = Button(window, text = "Vibration Only", command=VibrationOnly).place(x=600, y=400)
 BothButton = Button(window, text = "Both On", command=BothOn).place(x=900, y=400)
 StopButton = Button(window, text="Stop Stimulation", command=StopStim).place(x=450, y=500)
-print('before while')
+
 while True:
     stim.iterate()
     time.sleep(.01)
