@@ -2,10 +2,7 @@ import argparse
 import time
 
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds, BrainFlowPresets
-from numpy import savetxt
-
-
-
+import numpy
 
 def main():
     BoardShim.enable_dev_board_logger()
@@ -43,18 +40,21 @@ def main():
     params.file = args.file
     params.master_board = args.master_board
     params.preset = args.preset
-
     board = BoardShim(args.board_id, params)
     board.prepare_session()
-    board.start_stream ()
-    time.sleep(10)
+    board.start_stream()
+    time.sleep(.5)
     # data = board.get_current_board_data (256) # get latest 256 packages or less, doesnt remove them from internal buffer
     data = board.get_board_data()  # get all data and remove it from internal buffer
+    eeg_channels = BoardShim.get_eeg_channels(args.board_id)
+    time_stamp_channel = BoardShim.get_timestamp_channel(args.board_id)
+    marker_channel = BoardShim.get_marker_channel(args.board_id)
     board.stop_stream()
     board.release_session()
-
-    savetxt('data.csv', data, delimiter=',')
-
+    rows_of_interest = eeg_channels + [time_stamp_channel] + [marker_channel]
+    rows = numpy.stack([data[row] for row in rows_of_interest])
+    rows.tofile('data', sep=',')
 
 if __name__ == "__main__":
     main()
+
