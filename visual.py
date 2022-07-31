@@ -27,11 +27,12 @@ class controller():
             self.count = self.horizontal_count * self.vertical_count
         self.triangles = [triangle.triangle(self.canvas, x * self.radius + randint(-10, 10) + self.radius // 2 , y * self.radius + randint(-10, 10) + self.radius // 2, (self.radius - 10) // 2, random() - .5) for y in range(self.vertical_count + 1) for x in range(self.horizontal_count + 1)]
 
-    def iterate(self):
-        for t in self.triangles:
-            t.draw()
-        self.canvas.update()
-        for t in self.triangles:
-            t.rotate(self.period)
+    def iterate(self, on):
+        if on:
+            for t in self.triangles:
+                t.draw()
+            self.canvas.update()
+            for t in self.triangles:
+                t.rotate(self.period)
         self.canvas.delete('all')
 

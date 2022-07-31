@@ -10,10 +10,11 @@ class controller():
         self.it.start()
         self.board.analog[0].enable_reporting()
 
-    def iterate(self):
+    def iterate(self, on):
         reading = self.board.analog[0].read()
         if reading is None: return # first reading may be None, can just ignore it
-        self.board.digital[8].write(1 if reading > .9 else 0)
+        if on:
+            self.board.digital[8].write(1 if reading > .9 else 0)
 
 if __name__ == '__main__':
     c = controller()

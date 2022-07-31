@@ -6,15 +6,13 @@ import time
 class controller():
     def __init__(self):
         #             visual proprioception
-        self.modes = {'proprioception': True, 'visual': True] #[False, False] # enable a given stimulus
+        self.modes = {'proprioception': True, 'visual': True} #[False, False] # enable a given stimulus
         self.visualstim = visual.controller(tkinter.Tk(), .02)
         self.propstim = proprioception.controller()
 
     def iterate(self):
-        if self.modes[0]:
-            self.visualstim.iterate()
-        if self.modes[1]:
-            self.propstim.iterate()
+        self.visualstim.iterate(self.modes[0])
+        self.propstim.iterate(self.modes[1])
 
     # control functions to be connected to gui
 
