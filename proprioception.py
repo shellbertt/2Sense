@@ -26,7 +26,10 @@ class controller():
             self.ready = False
             print('GOooooooooooooooooooooooooooooooooooooooO!')
         else:
-            self.mark_step(.5) # step without stimulus
+            if reading >.9 and self.waited >= self.wait and self.ready:
+                self.mark_step(.5) # step without stimulus
+                self.ready = False
+                self.waited = 0
             if self.waited >= self.wait:
                 self.board.digital[8].write(0)
             print('NO!')
