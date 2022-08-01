@@ -3,15 +3,21 @@
 
 import argparse
 import time
-
 from brainflow.board_shim import BoardShim, BrainFlowInputParams, BoardIds, BrainFlowPresets
 import numpy
+
 class DataRecorder:
-    def __init__(self, board_id, boardshim_params=BrainFlowInputParams):
+    def __init__(self, board_id, dongle_port, boardshim_params=BrainFlowInputParams()):
+        boardshim_params.serial_port = dongle_port
+        self.trial_name = 'example'
+        self.trial_number = 1
         self.board_id = board_id
         BoardShim.enable_dev_board_logger()
         self.board = BoardShim(board_id, boardshim_params)
         self.board.prepare_session()
+
+    def insert_marker(self, value):
+        self.board.insert_marker(value)
 
     def save_data(self):
         data = self.board.get_board_data()  # get all data and remove it from internal buffer
@@ -20,7 +26,8 @@ class DataRecorder:
         marker_channel = BoardShim.get_marker_channel(self.board_id)
         rows_of_interest = eeg_channels + [time_stamp_channel] + [marker_channel]
         rows = numpy.stack([data[row] for row in rows_of_interest])
-        numpy.savetxt('data', rows)
+        numpy.savetxt('data/' + self.trial_name + '#' + str(self.trial_number) + 'at' + str(int(data[time_stamp_channel][-1])), rows)
+        self.trial_number += 1
 
     def begin_recording(self):
         self.board.start_stream()
