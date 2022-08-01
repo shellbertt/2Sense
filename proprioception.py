@@ -18,13 +18,11 @@ class controller():
     def iterate(self, on):
         reading = self.board.analog[0].read()
         if reading is None: return # first reading may be None, can just ignore it
-        print(reading, on, self.waited, self.wait,self.ready, end=': ')
         if reading > .9 and on and self.waited >= self.wait and self.ready:
             self.waited = 0
             self.mark_step(1) # step with simulus
             self.board.digital[8].write(1)
             self.ready = False
-            print('GOooooooooooooooooooooooooooooooooooooooO!')
         else:
             if reading >.9 and self.waited >= self.wait and self.ready:
                 self.mark_step(.5) # step without stimulus
@@ -32,12 +30,12 @@ class controller():
                 self.waited = 0
             if self.waited >= self.wait:
                 self.board.digital[8].write(0)
-            print('NO!')
         if reading < .65:
             self.ready = True
         if self.waited < self.wait:
             self.waited += 1
 
+# dummy function for testing
 def passer(trash):
     pass
 

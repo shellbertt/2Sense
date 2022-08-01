@@ -25,7 +25,25 @@ def main(file):
         # data (NDArray[Float64]), sampling_rate (int), start_freq (float), stop_freq (float), order (int), filter_type (int), ripple (float)
         df.DataFilter.perform_bandpass(eeg[i], sampling_rate, .05, 30, 2, df.FilterTypes.BUTTERWORTH, 0)
 
-    # 
+    # Split data into epochs at proprioceptive stimuli markers
+    non_zero_markers = numpy.nonzero(markers)
+    print(non_zero_markers)
+    split_eeg = [numpy.split(eeg[j], non_zero_markers) for j in range(len(eeg))]
+
+    # calculate baseline activity before each stimulus
+    baselines = [[numpy.mean(epoch[:-100]) for epoch in channel[:-1]] for channel in split_eeg]
+
+    # shorten to 500ms where result of stimulus will be most apparent
+    split_eeg = [[epoch[:500] for epoch in channel[1:]] for channel in split_eeg]
+
+    # subtract baseline
+    split_eeg -= [numpy.split(epoch, len(epoch)) for epoch in baselines]
+
+
+    # average across epochs
+    split_egg = [numpy.add(*channel) / len(channel) for channel in split_eeg]
+
+    print(eeg.size, split_eeg.size, split_eeg[0].size)
 
     # Save data
     numpy.savetxt(file + '_filtered', numpy.stack([channel for channel in eeg] + [time_stamps] + [markers]))
