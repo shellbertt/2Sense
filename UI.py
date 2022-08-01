@@ -30,17 +30,18 @@ ID=StringVar()
 UserName_input = Entry(window,bd=4,textvariable=ID)
 UserName_input.pack()
 
+stim = main.controller()
+
 Button_submit = Button(window, text = "SUBMIT", command=lambda: (UserName_input.pack_forget(), NameLabel.pack_forget(),Button_submit.pack_forget(), StimFrame()))
 Button_submit.pack()
 
-stim = main.controller('beanboy')
-
-def StimFrame():
-    
+def StimFrame():    
     #Takes user to the Stimulation window when "Submit" is pressed
 
     Username = UserName_input.get()
-    
+
+    stim.set_participant_name(Username)
+
     text2 = StringVar()
     NameDisplay = Label(window, textvariable=text2, padx=10,pady=20)
 
