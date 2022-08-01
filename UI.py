@@ -17,9 +17,6 @@ window.title("2Sense_Stimulation")
 
 bg = PhotoImage(file = "assets/LogoBanner.png") #adding an image as a background for later
 
-Width = 1000
-Height = 600
-
 Logo = Label(window, image = bg)
 Logo.pack()
 
@@ -70,21 +67,25 @@ def playBeep():
     pygame.mixer.music.play(loops=0)
 
 def NoStimulation():
+    playBeep()
     stim.disable("visual")
     stim.disable("proprioception")
     stim.new_recording()
 
 def VisualOnly():
+    playBeep()
     stim.enable("visual")
     stim.disable("proprioception")
     stim.new_recording()
     
 def VibrationOnly():
+    playBeep()
     stim.enable("proprioception")
     stim.disable("visual")
     stim.new_recording()
     
 def BothOn():
+    playBeep()
     stim.enable("proprioception")
     stim.enable("visual")
     stim.new_recording()
