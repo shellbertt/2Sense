@@ -99,8 +99,15 @@ def StopStim():
 
 window.protocol('WM_DELETE_WINDOW', StopStim)  #Stop stimulation when x button is pressed
 
+prev_time = time.time()
 while True:
     stim.iterate()
-    time.sleep(.01)
+    # normalise amongst loop body execution time across modes....
+    curr_time = time.time()
+    while curr_time - prev_time < .04:
+        time.sleep(.01)
+        curr_time = time.time()
+    prev_time = curr_time
+
 
 window.mainloop()
