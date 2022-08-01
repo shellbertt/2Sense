@@ -36,7 +36,7 @@ UserName_input.pack()
 Button_submit = Button(window, text = "SUBMIT", command=lambda: (UserName_input.pack_forget(), NameLabel.pack_forget(),Button_submit.pack_forget(), StimFrame()))
 Button_submit.pack()
 
-stim = main.controller()
+stim = main.controller('beanboy')
 
 def StimFrame():
     
@@ -72,26 +72,28 @@ def playBeep():
 def NoStimulation():
     stim.disable("visual")
     stim.disable("proprioception")
-     
+    stim.new_recording()
+
 def VisualOnly():
     stim.enable("visual")
     stim.disable("proprioception")
+    stim.new_recording()
     
 def VibrationOnly():
     stim.enable("proprioception")
     stim.disable("visual")
+    stim.new_recording()
     
 def BothOn():
     stim.enable("proprioception")
     stim.enable("visual")
+    stim.new_recording()
 
 def StopStim():
+    stim.new_recording() # save last recording
     stim.stop()
-    print('ss')
-    window.destrop()
-    print('wd')
+    window.destroy()
     exit()
-    print('?')
 
 window.protocol('WM_DELETE_WINDOW', StopStim)  #Stop stimulation when x button is pressed
 
