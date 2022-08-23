@@ -26,24 +26,20 @@ def main(file):
         df.DataFilter.perform_bandpass(eeg[i], sampling_rate, .05, 30, 2, df.FilterTypes.BUTTERWORTH, 0)
 
     # Split data into epochs at proprioceptive stimuli markers
-    non_zero_markers = numpy.nonzero(markers)
-    print(non_zero_markers)
-    split_eeg = [numpy.split(eeg[j], non_zero_markers) for j in range(len(eeg))]
+    non_zero_markers = numpy.nonzero(markers)[0]
+    split_eeg = numpy.array([numpy.array_split(eeg[j], non_zero_markers) for j in range(len(eeg))])
 
     # calculate baseline activity before each stimulus
-    baselines = [[numpy.mean(epoch[:-100]) for epoch in channel[:-1]] for channel in split_eeg]
+    baselines = numpy.array([[numpy.mean(epoch[:-100]) for epoch in channel[:-1]] for channel in split_eeg])
 
     # shorten to 500ms where result of stimulus will be most apparent
-    split_eeg = [[epoch[:500] for epoch in channel[1:]] for channel in split_eeg]
+    split_eeg = numpy.array([[epoch[:200] for epoch in channel[1:]] for channel in split_eeg])
 
     # subtract baseline
-    split_eeg -= [numpy.split(epoch, len(epoch)) for epoch in baselines]
-
+    split_eeg = numpy.array([[split_eeg[i][j] - baselines[i][j] for j in range(len(split_eeg[0]))] for i in range(len(split_eeg))])
 
     # average across epochs
-    split_egg = [numpy.add(*channel) / len(channel) for channel in split_eeg]
-
-    print(eeg.size, split_eeg.size, split_eeg[0].size)
+    avg_egg = numpy.array([numpy.add(*channel) / len(channel) for channel in split_eeg])
 
     # Save data
     numpy.savetxt(file + '_filtered', numpy.stack([channel for channel in eeg] + [time_stamps] + [markers]))
